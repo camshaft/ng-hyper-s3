@@ -40,7 +40,7 @@ pkg.directive('hyperS3', [
               format: format(hash)
             };
 
-            s3(el, config, input.config).end(done);
+            s3(el, config, input.config || input.s3).end(done);
           });
         });
 
