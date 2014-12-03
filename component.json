@@ -2,7 +2,7 @@
   "name": "ng-hyper-s3",
   "repo": "camshaft/ng-hyper-s3",
   "description": "upload a file to s3",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "keywords": [],
   "dependencies": {
     "camshaft/hash-file": "master",
