@@ -5,6 +5,7 @@
   "version": "0.1.0",
   "keywords": [],
   "dependencies": {
+    "camshaft/hash-file": "master",
     "camshaft/s3": "*",
     "benxamin/baseuri": "^0.0.2"
   },

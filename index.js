@@ -4,6 +4,7 @@
 
 var s3 = require('s3');
 var base = require('baseuri');
+var hashfile = require('hash-file');
 
 var name = 'ng-hyper-s3';
 
@@ -33,7 +34,14 @@ pkg.directive('hyperS3', [
                 base().replace(/\/$/, '') + success :
                 success;
 
-          s3(el, {redirect: redirect}, input.config).end(done);
+          hashfile(el.files[0], function(err, hash) {
+            var config = {
+              redirect: redirect,
+              format: format(hash)
+            };
+
+            s3(el, config, input.config).end(done);
+          });
         });
 
         function done(err, url) {
@@ -50,3 +58,9 @@ pkg.directive('hyperS3', [
     };
   }
 ]);
+
+function format(hash) {
+  return function(prefix, name) {
+    return prefix + '-' + hash + '-' + name;
+  }
+}
