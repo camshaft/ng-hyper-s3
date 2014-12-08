@@ -13,14 +13,20 @@ var pkg = module.exports = window.angular.module(name, []);
 pkg.name = name;
 
 pkg.directive('hyperS3', [
-  function() {
+  'hyper',
+  function(hyper) {
     return {
       restrict: 'A',
       link: function($scope, elem, attrs) {
-        var input;
+        var input, s3;
+        var path = attrs.hyperUpload;
 
-        $scope.$watch(attrs.hyperUpload, function(inpt) {
-          input = inpt;
+        hyper.get(path + '.s3', $scope, function(val) {
+          s3 = val;
+        });
+
+        hyper.get(path, $scope, function(val) {
+          input = val;
         });
 
         elem.bind('change', function() {
@@ -40,7 +46,7 @@ pkg.directive('hyperS3', [
               format: format(hash)
             };
 
-            s3(el, config, input.config || input.s3).end(done);
+            s3(el, config, s3 || input.config || input.s3).end(done);
           });
         });
 
@@ -60,7 +66,8 @@ pkg.directive('hyperS3', [
 ]);
 
 function format(hash) {
+  var sub = '/' + hash.substr(0, 2) + '/' + hash.substr(2);
   return function(prefix, name) {
-    return prefix + '-' + hash + '-' + name;
+    return prefix + sub + '/' + name;
   }
 }
