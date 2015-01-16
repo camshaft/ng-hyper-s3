@@ -2,7 +2,7 @@
  * Module dependencies
  */
 
-var s3 = require('s3');
+var S3 = require('s3');
 var base = require('baseuri');
 var hashfile = require('hash-file');
 
@@ -46,7 +46,7 @@ pkg.directive('hyperS3', [
               format: format(hash)
             };
 
-            s3(el, config, s3 || input.config || input.s3).end(done);
+            S3(el, config, s3 || input.config || input.s3).end(done);
           });
         });
 
