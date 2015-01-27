@@ -19,7 +19,7 @@ pkg.directive('hyperS3', [
       restrict: 'A',
       link: function($scope, elem, attrs) {
         var input, s3Conf;
-        var path = attrs.hyperS3 || attrs.hyperUpload;
+        var path = attrs.hyperUpload || attrs.hyperS3;
 
         hyper.get(path + '.s3', $scope, function(val) {
           s3Conf = val;
