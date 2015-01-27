@@ -18,11 +18,11 @@ pkg.directive('hyperS3', [
     return {
       restrict: 'A',
       link: function($scope, elem, attrs) {
-        var input, s3;
-        var path = attrs.hyperUpload;
+        var input, s3Conf;
+        var path = attrs.hyperS3 || attrs.hyperUpload;
 
         hyper.get(path + '.s3', $scope, function(val) {
-          s3 = val;
+          s3Conf = val;
         });
 
         hyper.get(path, $scope, function(val) {
@@ -32,21 +32,21 @@ pkg.directive('hyperS3', [
         elem.bind('change', function() {
           var el = elem[0];
           if (!input || (!el.value && !el.files[0])) return;
-
+          $scope.$eval(attrs.hyperS3Begin);
           $scope.$emit('hyper-s3-begin');
-          var success = attrs.hyperUploadSuccess || '/api';
-
-          var redirect = success.charAt(0) === '/' ?
-                base().replace(/\/$/, '') + success :
-                success;
 
           hashfile(el.files[0], function(err, hash) {
             var config = {
-              redirect: redirect,
               format: format(hash)
             };
 
-            S3(el, config, s3 || input.config || input.s3).end(done);
+            if (attrs.hyperS3Success) {
+              config.redirect = attrs.hyperS3Success.charAt(0) === '/' ?
+                base().replace(/\/$/, '') + attrs.hyperS3Success :
+                attrs.hyperS3Success;
+            }
+
+            S3(el, config, s3Conf || input.config || input.s3).end(done);
           });
         });
 
@@ -56,9 +56,9 @@ pkg.directive('hyperS3', [
           } else {
             input.$model = url.replace(/\s/gi, '+');
           }
-
-          $scope.$emit('hyper-s3-end');
           $scope.$digest();
+          $scope.$eval(attrs.hyperS3End);
+          $scope.$emit('hyper-s3-end');
         }
       }
     };
